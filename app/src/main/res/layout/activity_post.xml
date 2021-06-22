@@ -60,6 +60,18 @@
             android:id="@+id/image_added"
             />
 
+        <com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="Description"
+            android:maxLines="5"
+            android:id="@+id/description"
+            app:socialFlags="hashtag|mention"
+            app:hashtagColor="@color/colorPrimary"
+            />
+
+
 
 
     </LinearLayout>
