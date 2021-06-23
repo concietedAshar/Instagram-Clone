@@ -1,6 +1,7 @@
 package com.mrash.instagramclone.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
+    private static final String TAG = "UserAdapter";
     private Context mContext;
     private List<User> mUsers;
     private boolean isFragment;
@@ -42,12 +44,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(TAG, "onCreateViewHolder: Started");
         View view = LayoutInflater.from(mContext).inflate(R.layout.user_item,parent,false);
+        Log.d(TAG, "onCreateViewHolder: ");
         return new UserAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull UserAdapter.ViewHolder holder, int position) {
+        Log.d(TAG, "onBindViewHolder: Started");
         firebaseUser  = FirebaseAuth.getInstance().getCurrentUser();
 
         User user = mUsers.get(position);
@@ -55,40 +60,43 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         holder.userName.setText(user.getUsername());
         holder.fullName.setText(user.getName());
         Picasso.get().load(user.getImageurl()).placeholder(R.mipmap.ic_launcher).into(holder.imageProfile);
-        isFollowed(user.getId(),holder.follow);
 
         if(user.getId().equals(firebaseUser.getUid()))
         {
             holder.follow.setVisibility(View.GONE);
         }
-        //database ->create a branch called follow then under that id current user and
+        //database ->create a branch called follow then under that id current user
         holder.follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: follow Button");
                 if(holder.follow.getText().toString().equals("follow"))
                 {
-                    FirebaseDatabase.getInstance().getReference().child("follow").child((firebaseUser.getUid()))
+                    Log.d(TAG, "onClick: text is Follow");
+                    FirebaseDatabase.getInstance().getReference().child("Follow").child((firebaseUser.getUid()))
                             .child("following").child(user.getId()).setValue(true);
 
-                    FirebaseDatabase.getInstance().getReference().child("follow")
-                            .child(user.getId()).child("folowers").child(firebaseUser.getUid()).setValue(true);
+                    FirebaseDatabase.getInstance().getReference().child("Follow")
+                            .child(user.getId()).child("followers").child(firebaseUser.getUid()).setValue(true);
                 }
                 else
                 {
-                    FirebaseDatabase.getInstance().getReference().child("follow").child((firebaseUser.getUid()))
+                    Log.d(TAG, "onClick: text is following");
+                    FirebaseDatabase.getInstance().getReference().child("Follow").child((firebaseUser.getUid()))
                             .child("following").child(user.getId()).removeValue();
 
-                    FirebaseDatabase.getInstance().getReference().child("follow")
-                            .child(user.getId()).child("folowers").child(firebaseUser.getUid()).removeValue();
+                    FirebaseDatabase.getInstance().getReference().child("Follow")
+                            .child(user.getId()).child("followers").child(firebaseUser.getUid()).removeValue();
                 }
             }
         });
+        isFollowed(user.getId(),holder.follow);
 
     }
 
     private void isFollowed(String id, Button follow) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
-                .child("Following");
+                .child("following");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull  DataSnapshot snapshot) {
