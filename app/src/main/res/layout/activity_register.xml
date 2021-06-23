@@ -8,12 +8,13 @@
     android:orientation="vertical"
     android:padding="12dp"
     android:gravity="center"
+    android:background="@drawable/bacground_login"
     tools:context=".RegisterActivity">
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:src="@drawable/instagram_text"
+        android:layout_height="70dp"
+        android:src="@drawable/instagram"
         />
 
     <EditText
@@ -22,9 +23,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:layout_marginTop="15dp"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/Gram"
         android:fontFamily="serif-monospace"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/Gram"
         android:hint="Username"
         android:inputType="text"
         android:padding="12dp"
@@ -37,9 +38,9 @@
         android:background="@drawable/edit_text_background"
         android:layout_marginTop="15dp"
         android:hint="Name"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/Gram"
         android:fontFamily="serif-monospace"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/Gram"
         android:padding="12dp"
         android:inputType="textPersonName"
         />
@@ -50,9 +51,9 @@
         android:background="@drawable/edit_text_background"
         android:layout_marginTop="15dp"
         android:hint="Email"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/Gram"
         android:fontFamily="serif-monospace"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/Gram"
         android:padding="12dp"
         android:inputType="textEmailAddress"
         />
@@ -63,9 +64,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:layout_marginTop="15dp"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/Gram"
         android:fontFamily="serif-monospace"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/Gram"
         android:hint="Password"
         android:padding="12dp"
         android:inputType="textPassword"
@@ -80,6 +81,9 @@
         android:gravity="center"
         android:text="Register"
         android:textSize="20sp"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/Gram"
+        app:cornerRadius = "6dp"
         android:id="@+id/register"/>
 
     <TextView
@@ -92,7 +96,7 @@
         android:fontFamily="serif-monospace"
         android:textStyle="bold"
         android:padding="3dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         />
 
 </LinearLayout>

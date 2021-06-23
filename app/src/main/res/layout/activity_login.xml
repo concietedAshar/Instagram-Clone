@@ -8,12 +8,14 @@
     android:orientation="vertical"
     android:padding="12dp"
     android:gravity="center"
+    android:background="@drawable/bacground_login"
     tools:context=".LoginActivity">
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:src="@drawable/instagram_text"
+        android:layout_height="70dp"
+        android:src="@drawable/instagram"
+        android:layout_gravity="center_vertical"
         />
 
     <EditText
@@ -22,9 +24,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:layout_marginTop="15dp"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/Gram"
         android:fontFamily="serif-monospace"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/Gram"
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:padding="12dp"
@@ -36,9 +38,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:layout_marginTop="15dp"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/Gram"
         android:fontFamily="serif-monospace"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/Gram"
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="12dp"
@@ -52,7 +54,10 @@
         android:textSize="20sp"
         android:fontFamily="serif-monospace"
         android:gravity="center"
+        android:backgroundTint="@color/white"
+        app:cornerRadius = "6dp"
         android:text="Login"
+        android:textColor="@color/Gram"
         android:id="@+id/login"/>
 
     <TextView
@@ -65,7 +70,7 @@
         android:fontFamily="serif-monospace"
         android:textStyle="bold"
         android:padding="3dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         />
 
 </LinearLayout>
