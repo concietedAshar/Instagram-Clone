@@ -42,17 +42,21 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    //Scoail View for descriptions and to show hashtags....
     implementation "com.hendraanggrian.appcompat:socialview:0.2" // base library
     implementation "com.hendraanggrian.appcompat:socialview-commons:0.2"
 
+    // Image Cropper API
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
+    //for pics
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    // implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 
     //circular image view
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-
+    //Firebase Boom and Analytics
     implementation platform('com.google.firebase:firebase-bom:28.1.0')
     implementation 'com.google.firebase:firebase-analytics'
 }

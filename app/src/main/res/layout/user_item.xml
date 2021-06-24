@@ -21,10 +21,8 @@
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/overlock_sc"
             android:maxLines="1"
             android:padding="1dp"
-            android:text="UserName"
             android:textColor="@color/design_default_color_primary_dark"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -43,12 +41,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_background"
+        android:backgroundTint="@color/Gram"
         android:id="@+id/btn_follow"
         android:textColor="@color/white"
         android:textStyle="bold"
+        android:textSize="12sp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

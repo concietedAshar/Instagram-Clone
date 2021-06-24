@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hendraanggrian.appcompat.widget.SocialTextView;
+import com.mrash.instagramclone.Fragments.PostDetailFragment;
 import com.mrash.instagramclone.Model.Post;
 import com.mrash.instagramclone.Model.User;
 import com.mrash.instagramclone.R;
@@ -35,6 +37,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     public PostAdapter(Context mContext, List<Post> mPosts) {
         this.mContext = mContext;
         this.mPosts = mPosts;
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @NonNull
@@ -48,7 +51,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull PostAdapter.ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: Started ");
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
 
         Post post = mPosts.get(position);
         Picasso.get().load(post.getImageurl()).into(holder.postImage);
@@ -81,12 +84,88 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             }
         });
 
+        isLiked(post.getPostid(), holder.like);
+
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(holder.like.getTag().equals("like"))
+                {
+                    FirebaseDatabase.getInstance().getReference().child("Likes")
+                            .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
+
+                }else
+                {
+                    FirebaseDatabase.getInstance().getReference().child("Likes")
+                            .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
+                }
 
             }
         });
+
+        noOfLikes(post.getPostid(), holder.noOfLikes);
+        //when user click on postImage,open post
+        holder.postImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit().putString("postid",post.getPostid())
+                        .apply();
+
+                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container,new PostDetailFragment()).commit();
+            }
+        });
+
+    }
+
+    private void noOfLikes(String postId,TextView text)
+    {
+        FirebaseDatabase.getInstance().getReference().child("Likes").child(postId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.getChildrenCount() > 0)
+                        text.setText(snapshot.getChildrenCount() + " Likes");
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+    }
+
+    /**
+     * Check if the post is liked or not already
+     * @param poitId
+     * @param imageView
+     */
+    private void isLiked(String poitId,ImageView imageView)
+    {
+        FirebaseDatabase.getInstance().getReference().child("Likes").child(poitId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull  DataSnapshot snapshot) {
+
+                        if(snapshot.child(firebaseUser.getUid()).exists())
+                        {
+                            imageView.setImageResource(R.drawable.ic_liked);
+                            imageView.setTag("liked");
+                        }
+                        else
+                        {
+                            imageView.setImageResource(R.drawable.ic_like);
+                            imageView.setTag("like");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
     }
 
