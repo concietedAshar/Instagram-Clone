@@ -45,19 +45,20 @@ public class HomeFragment extends Fragment {
         followingList = new ArrayList<>();
 
         recyclerViewPosts = view.findViewById(R.id.recycler_view_posts);
+
         recyclerViewPosts.setHasFixedSize(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setStackFromEnd(true); // new post at top
-        linearLayoutManager.setReverseLayout(true);
+        // new post at top
+        linearLayoutManager.setStackFromEnd(true); //fill post from bottom on screen
+        linearLayoutManager.setReverseLayout(true); //
+
         //setting linear layout of post on recycler view
         recyclerViewPosts.setLayoutManager(linearLayoutManager);
 
         //setting posts on adapter
-
         postAdapter = new PostAdapter(getContext(),postList);
         recyclerViewPosts.setAdapter(postAdapter);
-
 
         //this will check for those following peoples
         checkFollowingUser();

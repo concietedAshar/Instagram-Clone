@@ -62,6 +62,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder>{
         }
     }
 
+    //public function that is called from Search Fragment from filter function
     public void filter(List<String> filterTags,List<String> filterTagsCount)
     {
         this.mTags = filterTags;

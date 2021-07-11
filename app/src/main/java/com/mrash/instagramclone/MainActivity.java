@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Setup Bottom Navigation View
+     *
+     * set the fragment on th base of their id's
      */
     private void setBottomNavigationView()
     {
@@ -65,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                 }
+                //will set and show that fragment on main activity and replace that container
+                //  layout with that clicked menu base fragment
                 if(selectorFragment != null)
                 {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectorFragment).commit();

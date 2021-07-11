@@ -34,6 +34,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     private List<Post> mPosts;
     private FirebaseUser firebaseUser;
 
+    //Constructor of Post Adapter
     public PostAdapter(Context mContext, List<Post> mPosts) {
         this.mContext = mContext;
         this.mPosts = mPosts;
@@ -53,11 +54,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         Log.d(TAG, "onBindViewHolder: Started ");
 
 
+        // get post from post array on the base of position
         Post post = mPosts.get(position);
+        //picasso is used to process/load image
         Picasso.get().load(post.getImageurl()).into(holder.postImage);
 
         holder.description.setText(post.getDescription());
 
+        //getting data of post
         FirebaseDatabase.getInstance().getReference().child("Users").child(post.getPublisher())
                 .addValueEventListener(new ValueEventListener() {
             @Override
@@ -65,12 +69,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                 Log.d(TAG, "onDataChange: Getting data from User and setting post");
                 User user = snapshot.getValue(User.class);
 
+                //I have set automatically image url to default so user have to update its pic first time from profile setting
                 if(user.getImageurl().equals("default"))
                 {
                     holder.imgProfile.setImageResource(R.mipmap.ic_launcher);
                 }
                 else
                     {
+                        //load the imageurl
                         Picasso.get().load(user.getImageurl()).placeholder(R.mipmap.ic_launcher).into(holder.imgProfile);
                     }
                 holder.username.setText(user.getUsername());
@@ -84,8 +90,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             }
         });
 
+        // function to check if post is liked or not
         isLiked(post.getPostid(), holder.like);
 
+        //if user click on the like button then it will update the post which is liked and
+        // add data of user who like it
+        //and at the same time if user unlike the post then remove the value from firebase
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +114,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         });
 
         noOfLikes(post.getPostid(), holder.noOfLikes);
-        //when user click on postImage,open post
+
+        //when user click on postImage of anyPost,open that post and replace that main Activity Container Layout
+        // with post-detail fragment to show post
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,8 +128,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             }
         });
 
-    }
+    }//onbind end
 
+    //get noOfLikes of posts ony by one
     private void noOfLikes(String postId,TextView text)
     {
         FirebaseDatabase.getInstance().getReference().child("Likes").child(postId)
@@ -126,7 +139,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.getChildrenCount() > 0)
                         text.setText(snapshot.getChildrenCount() + " Likes");
-
                     }
 
                     @Override
@@ -142,6 +154,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
      * @param poitId
      * @param imageView
      */
+
+    //if post is already liked by current user then clicking on liked button will unlike it and vice versa...
     private void isLiked(String poitId,ImageView imageView)
     {
         FirebaseDatabase.getInstance().getReference().child("Likes").child(poitId)

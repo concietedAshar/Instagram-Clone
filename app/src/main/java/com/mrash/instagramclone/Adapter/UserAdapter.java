@@ -59,6 +59,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         holder.follow.setVisibility(View.VISIBLE);
         holder.userName.setText(user.getUsername());
         holder.fullName.setText(user.getName());
+        //Load pic and set as profile image
         Picasso.get().load(user.getImageurl()).placeholder(R.mipmap.ic_launcher).into(holder.imageProfile);
 
         if(user.getId().equals(firebaseUser.getUid()))
@@ -70,6 +71,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: follow Button");
+                //here setting follow and following button
                 if(holder.follow.getText().toString().equals("follow"))
                 {
                     Log.d(TAG, "onClick: text is Follow");
@@ -93,6 +95,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         isFollowed(user.getId(),holder.follow);
 
     }
+
+
+    /**
+     * check and see if user is following and followed and set text according to it
+     * @param id
+     * @param follow
+     */
 
     private void isFollowed(String id, Button follow) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())

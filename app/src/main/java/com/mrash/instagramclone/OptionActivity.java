@@ -25,12 +25,19 @@ public class OptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_option);
 
         logout = findViewById(R.id.logout);
+        // this setting hasn't been setup yet
         setting = findViewById(R.id.settings);
 
+
         Toolbar toolbar = findViewById(R.id.toolbar);
+        //set toolbar to act as action bar so that on this back and other icons can perform action
         setSupportActionBar(toolbar);
+
+        //setting title to Options
         getSupportActionBar().setTitle("Options");
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+
+        //called when user clicked start of the tollbar
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,6 +45,7 @@ public class OptionActivity extends AppCompatActivity {
             }
         });
 
+        //logout the firebase account and return user to startActivity
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

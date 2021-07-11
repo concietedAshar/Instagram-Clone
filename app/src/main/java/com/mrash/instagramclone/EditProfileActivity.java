@@ -60,6 +60,7 @@ public class EditProfileActivity extends AppCompatActivity {
         //init
         init();
 
+        //getting Current User and Its data
         FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -79,9 +80,14 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 });
 
+        //if user want to close the edit profile ativity
         setClose();
+
+        //if user want to change profile pic
+        //both will do the same thing -> when user click on text(Change Profile) or Click on Photo.
         setChangePhoto();
         setImageProfile();
+        //save everything on Firebase after editing everything
         setSave();
 
 
@@ -106,6 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
          map.put("name",fullName.getText().toString());
          map.put("bio",bio.getText().toString());
 
+         //directly update children data of current user detail in Users
          FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).updateChildren(map);
     }
 
@@ -130,6 +137,7 @@ public class EditProfileActivity extends AppCompatActivity {
         pd.show();
         if(mImageUri !=null)
         {
+            //setting same things that have setted in PostActivity
             StorageReference fileRef = storageRef.child(System.currentTimeMillis()+".jpeg");
             uploadTask = fileRef.putFile(mImageUri);
             uploadTask.continueWithTask(new Continuation() {
@@ -167,6 +175,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    //
     private void setImageProfile()
     {
         imageProfile.setOnClickListener(new View.OnClickListener() {
@@ -178,6 +187,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
+    //changing profile photo using CopImage Class
     private void setChangePhoto()
     {
         changePhoto.setOnClickListener(new View.OnClickListener() {

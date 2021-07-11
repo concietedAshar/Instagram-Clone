@@ -17,11 +17,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+//getting call from Profile Fragment to show Post Pics on profile
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
 
     private Context mContext;
     private List<Post> mPosts;
 
+    //Constructor of Photo Adapter
     public PhotoAdapter(Context mContext, List<Post> mPosts) {
         this.mContext = mContext;
         this.mPosts = mPosts;
@@ -37,8 +39,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull PhotoAdapter.ViewHolder holder, int position) {
 
+
         Post post = mPosts.get(position);
+        //load image url of post and set it
         Picasso.get().load(post.getImageurl()).placeholder(R.mipmap.ic_launcher).into(holder.postImage);
+        //here the same with posts when user clcik on the image it will open that post seperately
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

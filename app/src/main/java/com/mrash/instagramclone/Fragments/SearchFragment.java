@@ -46,27 +46,38 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        //attaching rv of user to show on search bar
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        //attaching rv of tags to show on search bar
         recyclerViewTags = view.findViewById(R.id.recycler_view_tags);
         recyclerViewTags.setHasFixedSize(true);
         recyclerViewTags.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        //Array for the Hashtags that are seperated from description and saved...
         mHashTags = new ArrayList<>();
+        //get the count of every hashtag
         mHashTagsCount = new ArrayList<>();
+
         tagAdapter = new TagAdapter(getContext(),mHashTags,mHashTagsCount);
 
+        //creating array list for getting user n'd setting on search bar
         mUsers = new ArrayList<>();
+
         userAdapter = new UserAdapter(getContext(),mUsers,true);
         recyclerView.setAdapter(userAdapter);
 
         recyclerViewTags.setAdapter(tagAdapter);
         searchBar = view.findViewById(R.id.search_bar);
 
+        //read user that has to be set
         readUsers();
+        //read tags that has to be set
         readTags();
+        //search bar is socialAutocomplete text view so using that functionalities
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -75,12 +86,14 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //when searching search string starting with that characters
                 searchUser(s.toString());
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                //
                 filter(s.toString());
 
             }
@@ -92,6 +105,8 @@ public class SearchFragment extends Fragment {
 
     private void readTags() {
 
+        //reading tags and setting it on tags rv
+
         FirebaseDatabase.getInstance().getReference().child("HashTags")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -101,7 +116,8 @@ public class SearchFragment extends Fragment {
                         mHashTagsCount.clear();
                         for(DataSnapshot dataSnapshot:snapshot.getChildren())
                         {
-                            mHashTags.add(dataSnapshot.getKey());
+                            mHashTags.add(dataSnapshot.getKey()); //here key is hashtag
+                            //getting that hashtag count
                             mHashTagsCount.add(dataSnapshot.getChildrenCount()+"");
                         }
                         tagAdapter.notifyDataSetChanged();
@@ -144,6 +160,7 @@ public class SearchFragment extends Fragment {
     //search user
     private void searchUser(String keySearch)
     {
+        //Query is subclass of Firebase Database Reference
         Query query = FirebaseDatabase.getInstance().getReference().child("Users").orderByChild("username")
                 .startAt(keySearch).endAt(keySearch + "\uf8ff");
         query.addValueEventListener(new ValueEventListener() {
@@ -164,7 +181,7 @@ public class SearchFragment extends Fragment {
             }
         });
     }
-    //search tags
+    //search tags and after searching filter that tag and set on adapter
     private void filter(String text)
     {
         List<String> mSearchTags = new ArrayList<>();

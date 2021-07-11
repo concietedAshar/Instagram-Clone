@@ -67,6 +67,7 @@ public class ProfileFragment extends Fragment {
       View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
       fUser = FirebaseAuth.getInstance().getCurrentUser();
+
       profileId = fUser.getUid();
 
       editProfile =view.findViewById(R.id.edit_profile);
@@ -81,24 +82,38 @@ public class ProfileFragment extends Fragment {
       myPictures = view.findViewById(R.id.my_pictures);
       savedPictures = view.findViewById(R.id.saved_pictures);
       recyclerView = view.findViewById(R.id.recycler_view_pictures);
+
       recyclerView.setHasFixedSize(true);
+
       recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
+
       myPhotoList = new ArrayList<>();
+
       photoAdapter = new PhotoAdapter(getContext(),myPhotoList);
+
       recyclerView.setAdapter(photoAdapter);
 
       userInfo();
+
       getFollowerAndFollowingCount();
+
       getPostCount();
+
       getMyPhotos();
+
+      //Setting Edit profile Button text at runtime
       if(profileId.equals(fUser.getUid()))
       {
           editProfile.setText("Edit Profile");
-      }else {
-          checkFollowingStatus();
+      }
+      else {
+          //uncomment when future work on follow or following profiles of other users
+       //   checkFollowingStatus();
       }
 
       setEditProfile();
+
+      //setting option so that we can logout and edit profile
 
       options.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -107,8 +122,6 @@ public class ProfileFragment extends Fragment {
               startActivity(new Intent(getContext(), OptionActivity.class));
           }
       });
-
-
         return view;
     }
 
@@ -125,10 +138,11 @@ public class ProfileFragment extends Fragment {
                 String buttonText = editProfile.getText().toString();
                 if(buttonText.equals("Edit Profile"))
                 {
-                    // goto edit profile
+                    // goto edit profile Activity
                     startActivity(new Intent(getContext(), EditProfileActivity.class));
                 }else
-                {
+                { // this is extra for the future more work for learning -> Just do nothing for now because
+                    // it is uncomplete and doesn't completed yet
                     if(buttonText.equals("follow"))
                     {
                         FirebaseDatabase.getInstance().getReference().child("Follow").child(fUser.getUid()).child("following")
@@ -136,7 +150,8 @@ public class ProfileFragment extends Fragment {
 
                         FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId).child("followers")
                                 .child(fUser.getUid()).setValue(true);
-                    }else
+                    }
+                    else
                     {
                         FirebaseDatabase.getInstance().getReference().child("Follow").child(fUser.getUid()).child("following")
                                 .child(profileId).removeValue();
@@ -144,7 +159,6 @@ public class ProfileFragment extends Fragment {
                         FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId).child("followers")
                                 .child(fUser.getUid()).removeValue();
                     }
-
                 }
             }
         });
@@ -155,6 +169,7 @@ public class ProfileFragment extends Fragment {
      * Get All photos on the base of current user profile id
      */
     private void getMyPhotos() {
+        //Create Firebase database reference upto Posts then get getting post of that current user
         FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -162,13 +177,14 @@ public class ProfileFragment extends Fragment {
                 for (DataSnapshot dataSnapshot:snapshot.getChildren())
                 {
                     Post post = dataSnapshot.getValue(Post.class);
-                    //post is made by current user then add to list
+                    //post is uploaded by current user then add to list
                     if(post.getPublisher().equals(profileId))
                     {
                         myPhotoList.add(post);
 
                     }
                 }
+                //this will reverse the list of post like on Instagram showing new post at the top and then so-on..
                 Collections.reverse(myPhotoList);
                 photoAdapter.notifyDataSetChanged();
             }
@@ -180,9 +196,11 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+
     /**
      * Checking the follow or following status to set  Edit Profile Button to Follow or following Button
      */
+     /* not useful yet - > will use when more work on this project
     private void checkFollowingStatus() {
         FirebaseDatabase.getInstance().getReference().child("Follow").child(fUser.getUid()).child("following")
                 .addValueEventListener(new ValueEventListener() {
@@ -205,12 +223,15 @@ public class ProfileFragment extends Fragment {
                     }
                 });
     }
+    */
 
     /**
      * Get post Counts and display on the profile using profile id
      */
+
     private void getPostCount()
     {
+        //create reference upto Posts and then this will count the post of current user n'd set on Posts(Text)
         FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -218,7 +239,7 @@ public class ProfileFragment extends Fragment {
                 for (DataSnapshot dataSnapshot:snapshot.getChildren())
                 {
                     Post post = dataSnapshot.getValue(Post.class);
-
+                    //if posts publisher/unique user id matches with profileId/CurrentUserId
                     if(post.getPublisher().equals(profileId))
                     {
                         counter++;
@@ -242,6 +263,7 @@ public class ProfileFragment extends Fragment {
      */
     private void getFollowerAndFollowingCount()
     {
+        //count the followers list -> to which by the current user is followed... and set on follow(text)
         DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId);
         ref.child("followers").addValueEventListener(new ValueEventListener() {
             @Override
@@ -257,6 +279,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        //count the following list -> to whom the current user is following...and set on following(text)
         FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId)
                 .child("following").addValueEventListener(new ValueEventListener() {
             @Override
@@ -272,7 +295,7 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     *  getting user info then set on profile Screen
+     *  getting user info then set on profile Screen like username n'd profile pic n'd description...
      */
     private void userInfo()
     {
@@ -281,7 +304,10 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                        //getting value from snapshot object and store the whole data in
+                        //User model
                         User user = snapshot.getValue(User.class);
+                        //then get the detail of current user and set on profile
                         Picasso.get().load(user.getImageurl()).into(imageProfile);
                         username.setText(user.getUsername());
                         fullName.setText(user.getName());

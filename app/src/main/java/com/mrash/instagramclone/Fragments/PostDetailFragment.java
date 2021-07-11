@@ -35,18 +35,31 @@ public class PostDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_post_detail, container, false);
 
+        //here i am just setting single post when user clicked on image of that post
+        // ->calling from Post Adapter
+        //by the time if idea changes then we can add and show all posts of one user or something other
         postId = getContext().getSharedPreferences("PREFS", Context.MODE_PRIVATE)
                 .getString("postid","none");
+
+        //attach RecyclerView of Fragment_post_detail
         recyclerView = view.findViewById(R.id.recycler_view);
+
         recyclerView.setHasFixedSize(true);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         postList = new ArrayList<>();
+
+        //calling to post adapter again and setting that single post
         postAdapter = new PostAdapter(getContext(),postList);
+
         recyclerView.setAdapter(postAdapter);
 
+        //getting that post id where user clicked on post activity
         FirebaseDatabase.getInstance().getReference().child("Posts").child(postId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
